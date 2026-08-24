@@ -7,9 +7,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // 👇 Estas líneas son las que faltaban
-  basePath: '/PaginaPersonal',
-  assetPrefix: '/PaginaPersonal',
   trailingSlash: true,
 }
 
