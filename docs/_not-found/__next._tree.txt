@@ -1,2 +1,2 @@
-:HL["https://luccatonny.github.io/PaginaPersonal/_next/static/chunks/0-ycjkx62lpm-.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"IVief799k1V6p-QAm5PPU"}
+:HL["/_next/static/chunks/0yqv6g6awzahn.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"sMFbM6Zga4We7XisZTkKf"}

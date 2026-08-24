@@ -7,8 +7,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // 👇 IMPORTANTE: Usar assetPrefix con la URL completa
-  assetPrefix: 'https://luccatonny.github.io/PaginaPersonal',
+  // 👇 QUITA assetPrefix y basePath - NO los uses
   trailingSlash: true,
 }
 
