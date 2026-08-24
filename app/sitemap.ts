@@ -3,10 +3,12 @@ import type { MetadataRoute } from "next"
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://portfolio.example.com",
+      url: "https://luccatonny.github.io/PaginaPersonal",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
   ]
 }
+
+export const dynamic = 'force-static'
