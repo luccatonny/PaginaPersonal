@@ -8,7 +8,6 @@ export function Footer() {
     { icon: GithubIcon, href: profile.links.github, label: "GitHub" },
     { icon: LinkedinIcon, href: profile.links.linkedin, label: "LinkedIn" },
     { icon: Mail, href: profile.links.email, label: "Correo" },
-    { icon: Video, href: profile.links.drive, label: "Videos (Drive)" },
   ]
 
   return (

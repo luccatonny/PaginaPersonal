@@ -31,11 +31,11 @@ export function ThemeToggle() {
             transition={{ duration: 0.2 }}
             className="grid place-items-center"
           >
-            {isDark ? <Moon className="h-[18px] w-[18px]" /> : <Sun className="h-[18px] w-[18px]" />}
+            {isDark ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
           </motion.span>
         </AnimatePresence>
       ) : (
-        <span className="h-[18px] w-[18px]" />
+        <span className="h-4.5 w-4.5" />
       )}
     </button>
   )
