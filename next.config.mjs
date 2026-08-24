@@ -1,12 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // <--- ¡Esta línea es la clave!
+  output: 'export',
   typescript: {
     ignoreBuildErrors: true,
   },
   images: {
     unoptimized: true,
   },
+  // 👇 Estas líneas son las que faltaban
+  basePath: '/PaginaPersonal',
+  assetPrefix: '/PaginaPersonal',
+  trailingSlash: true,
 }
 
 export default nextConfig
