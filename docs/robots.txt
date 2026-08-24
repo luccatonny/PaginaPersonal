@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://luccatonny.github.io/PaginaPersonal/sitemap.xml
