@@ -1,10 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Download, ArrowRight, Mail, MapPin } from "lucide-react"
+import { Download, ArrowRight, Mail, MapPin, ChevronDown } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons"
 import { profile } from "@/lib/data"
 import Image from "next/image"
+import { useState, useRef, useEffect } from "react"
 
 const container = {
   hidden: {},
@@ -16,6 +17,20 @@ const item = {
 }
 
 export function Hero() {
+  const [isCvDropdownOpen, setIsCvDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCvDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   return (
     <section id="hero" className="relative overflow-hidden pt-36 pb-20 md:pt-44 md:pb-28">
       {/* backdrop */}
@@ -87,13 +102,40 @@ export function Hero() {
             variants={item}
             className="flex flex-wrap gap-4 pt-4"
           >
-            <a
-              href={profile.cvUrl}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:scale-105 hover:bg-primary/90"
-            >
-              <Download className="h-5 w-5" />
-              Descargar CV
-            </a>
+            {/* ✅ BOTÓN DE CV CON DROPDOWN - CORREGIDO */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIsCvDropdownOpen(!isCvDropdownOpen)
+                }}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:scale-105 hover:bg-primary/90"
+              >
+                <Download className="h-5 w-5" />
+                Descargar CV
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isCvDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isCvDropdownOpen && (
+                <div className="absolute left-0 mt-2 w-56 rounded-xl border border-border bg-background shadow-lg py-2 z-50 overflow-hidden">
+                  {profile.cvs?.map((cv, index) => (
+                    <a
+                      key={index}
+                      href={`/assets/documents/cv/${cv.file}`}
+                      download
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsCvDropdownOpen(false)
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-secondary transition-colors"
+                    >
+                      <span className="text-xl">{cv.icon || '📄'}</span>
+                      <span>{cv.label}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <a
               href="#projects"
@@ -132,7 +174,7 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Photo - usando tu imagen real */}
+        {/* Photo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -154,7 +196,6 @@ export function Hero() {
                 priority
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
-              {/* Overlay con información */}
               <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
               <div className="relative z-10 mt-auto p-6 text-center w-full">
                 <h3 className="text-lg font-semibold text-white">

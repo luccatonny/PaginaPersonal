@@ -15,7 +15,20 @@ export const profile = {
   name: "Williams Anthony Sanabria Tinoco",
   role: "Ingeniero de Sistemas e Informática | Full Stack Developer",
   location: "Huancayo, Perú",
-  cvUrl: "/assets/documents/cv/WilliamsAnthonySanabriaTinocoCV_26_04_2026.pdf",
+  cvs: [
+    { 
+      label: "📄 Español", 
+      file: "WILLIAMSANTHONY_SANABRIATINOCO_CV_español_clasico.pdf",
+      lang: "es",
+      icon: "🇪🇸"
+    },
+    { 
+      label: "📄 English", 
+      file: "WILLIAMSANTHONY_SANABRIATINOCO_CV_2 ingles_clasico.pdf",
+      lang: "en",
+      icon: "🇬🇧"
+    },
+  ],
   tagline: "Ingeniero de Sistemas con experiencia en desarrollo full-stack, infraestructura tecnológica y soporte especializado. Combino habilidades técnicas en Next.js, NestJS, Flutter y Power BI con administración de sistemas y redes. Apasionado por construir soluciones tecnológicas que transforman procesos y generan impacto real.",
   titles: [
     "Ingeniero de Sistemas",
@@ -32,9 +45,9 @@ export const profile = {
 
 export const about = {
   paragraphs: [
-    "Soy Ingeniero de Sistemas e Informática con experiencia integral en desarrollo de software full-stack, gestión de infraestructura tecnológica y soporte técnico especializado. He trabajado en el sector microfinanciero, retail y proyectos independientes, combinando habilidades técnicas con una fuerte orientación al cliente.",
-    "Actualmente me desempeño como Asistente de Ingeniería de Sistemas en el sector microfinanciero, donde combino desarrollo de aplicaciones móviles con Flutter, análisis de datos con Power BI, administración de sistemas y soporte técnico especializado.",
-    "Mi enfoque está en crear soluciones tecnológicas escalables que resuelvan problemas reales. He desarrollado aplicaciones web full-stack con Next.js y NestJS, aplicaciones móviles multiplataforma, y he implementado infraestructura en la nube con Docker y DigitalOcean.",
+    "Soy **Ingeniero de Sistemas e Informática** con experiencia integral en **desarrollo full-stack**, **infraestructura tecnológica** y **soporte especializado**. He trabajado en el **sector microfinanciero**, **retail** y en **proyectos independientes**, combinando habilidades técnicas con una fuerte orientación al cliente y al negocio.",
+    "Como **Desarrollador Full-Stack**, he liderado la creación de aplicaciones móviles con **Flutter**, dashboards interactivos con **Power BI**, y sistemas backend escalables con **NestJS** y **Node.js**. También he administrado infraestructura en la nube con **Docker** y **DigitalOcean**, garantizando soluciones robustas y confiables.",
+    "Mi enfoque está en construir **soluciones tecnológicas escalables** que resuelvan problemas reales. Disfruto trabajar en equipo, aprender continuamente y transformar ideas en productos que generan **impacto tangible**.",
   ],
   highlights: [
     "Arquitectura limpia y SOLID",
@@ -136,7 +149,7 @@ export type Experience = {
 export const experiences: Experience[] = [
   {
     company: "Sector Microfinanciero",
-    role: "Asistente de Ingeniería de Sistemas",
+    role: "Desarrollador Full-Stack",
     period: "Febrero 2025 — Julio 2026",
     description:
       "Soporte técnico integral a usuarios del sistema financiero, garantizando la continuidad operativa de las agencias. Administración de sistemas operativos, software especializado y aplicaciones financieras.",
@@ -261,21 +274,21 @@ export const certifications: Certification[] = [
     institution: "Platzi",
     date: "Noviembre 2024",
     description: "13 horas de teoría y práctica en Python para ciencia de datos.",
-    url: "https://platzi.com/@70399468/",
+    url: "https://drive.google.com/file/d/1jBXFAV2E8cPb4c5fbu8yf5phWO-nEgZF/view?usp=drive_link",
   },
   {
     title: "Curso Profesional de Git y GitHub",
     institution: "Platzi",
     date: "Diciembre 2024",
     description: "22 horas de teoría y práctica en control de versiones con Git y GitHub.",
-    url: "https://platzi.com/@70399468/",
+    url: "https://drive.google.com/file/d/1FG0fu9hllqev-4Qg4Cr9tUuC-O93G5L4/view?usp=sharing",
   },
   {
     title: "Tercer Puesto - Feria de Proyectos de Ingeniería",
     institution: "Universidad Continental",
     date: "Octubre 2024",
     description: "Aplicación móvil con tecnología emergente para el control y uso eficiente del agua potable.",
-    url: "#",
+    url: "https://drive.google.com/file/d/1Uzq4tsKWMKOCTqLZm1Dbt1kjOjtoJuuC/view?usp=sharing",
   },
 ]
 
