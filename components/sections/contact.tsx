@@ -4,7 +4,6 @@ import { useState, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import emailjs from "@emailjs/browser"
 import { Send, Loader2, CheckCircle2, Mail, MapPin } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -49,35 +48,28 @@ export function Contact() {
     setError(null)
     
     try {
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      // ✅ Enviamos los datos a nuestra API Route (no directamente a EmailJS)
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          message: values.message,
+          current_date: getCurrentDate(),
+        }),
+      })
 
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error("Faltan las variables de configuración de EmailJS")
-      }
+      const result = await response.json()
 
-      // ✅ Agregamos la fecha actual a los parámetros
-      const templateParams = {
-        from_name: values.name,
-        from_email: values.email,
-        message: values.message,
-        current_date: getCurrentDate(), // 🆕 Fecha actual formateada
-      }
-
-      const result = await emailjs.send(
-        serviceId,
-        templateId,
-        templateParams,
-        publicKey
-      )
-
-      if (result.status === 200) {
+      if (response.ok) {
         setSent(true)
         reset()
         setTimeout(() => setSent(false), 4000)
       } else {
-        throw new Error("Error al enviar")
+        throw new Error(result.error || "Error al enviar")
       }
     } catch (err) {
       setError("Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.")
