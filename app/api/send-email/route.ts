@@ -5,18 +5,17 @@ export async function POST(request: NextRequest) {
   console.log('📧 API send-email called');
   
   try {
-    // 1. Obtener variables de entorno
+    // ✅ CAMBIO IMPORTANTE: Usar PUBLIC_KEY
     const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
     const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-    // ✅ CORRECTO: Usamos la Public Key (comienza con "s-gPoolXM20Fu4378")
-    const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
+    const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY; // ← ¡Esto es lo que cambia!
 
     console.log('🔍 Variables de entorno:');
     console.log('SERVICE_ID:', SERVICE_ID ? `"${SERVICE_ID}"` : '❌ NO EXISTE');
     console.log('TEMPLATE_ID:', TEMPLATE_ID ? `"${TEMPLATE_ID}"` : '❌ NO EXISTE');
     console.log('PUBLIC_KEY:', PUBLIC_KEY ? `"${PUBLIC_KEY}"` : '❌ NO EXISTE');
 
-    // 2. Validar variables de entorno
+    // ✅ Validar variables
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       console.error('❌ Faltan variables de entorno de EmailJS');
       return NextResponse.json(
@@ -58,7 +57,7 @@ export async function POST(request: NextRequest) {
     console.log('📤 Enviando a EmailJS via REST API');
 
     // 6. Enviar email usando fetch directo
-    // ✅ La Public Key va en "user_id", NO la Private Key
+    // ✅ La Public Key va en "user_id"
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
@@ -67,7 +66,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         service_id: SERVICE_ID,
         template_id: TEMPLATE_ID,
-        user_id: PUBLIC_KEY,  // ✅ ¡CORRECTO! Usamos la Public Key aquí
+        user_id: PUBLIC_KEY,  // ← ¡Public Key aquí!
         template_params: templateParams,
       }),
     });
