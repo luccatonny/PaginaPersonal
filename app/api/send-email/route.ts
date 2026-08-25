@@ -8,15 +8,16 @@ export async function POST(request: NextRequest) {
     // 1. Obtener variables de entorno
     const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
     const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-    const PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
+    // ✅ CORRECTO: Usamos la Public Key (comienza con "s-gPoolXM20Fu4378")
+    const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
 
     console.log('🔍 Variables de entorno:');
     console.log('SERVICE_ID:', SERVICE_ID ? `"${SERVICE_ID}"` : '❌ NO EXISTE');
     console.log('TEMPLATE_ID:', TEMPLATE_ID ? `"${TEMPLATE_ID}"` : '❌ NO EXISTE');
-    console.log('PRIVATE_KEY:', PRIVATE_KEY ? `"${PRIVATE_KEY.substring(0, 10)}..."` : '❌ NO EXISTE');
+    console.log('PUBLIC_KEY:', PUBLIC_KEY ? `"${PUBLIC_KEY}"` : '❌ NO EXISTE');
 
     // 2. Validar variables de entorno
-    if (!SERVICE_ID || !TEMPLATE_ID || !PRIVATE_KEY) {
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       console.error('❌ Faltan variables de entorno de EmailJS');
       return NextResponse.json(
         { error: 'Error de configuración del servidor' },
@@ -57,6 +58,7 @@ export async function POST(request: NextRequest) {
     console.log('📤 Enviando a EmailJS via REST API');
 
     // 6. Enviar email usando fetch directo
+    // ✅ La Public Key va en "user_id", NO la Private Key
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         service_id: SERVICE_ID,
         template_id: TEMPLATE_ID,
-        user_id: PRIVATE_KEY,
+        user_id: PUBLIC_KEY,  // ✅ ¡CORRECTO! Usamos la Public Key aquí
         template_params: templateParams,
       }),
     });
@@ -89,7 +91,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('❌ Error en API send-email:', error);
     
-    // Mostrar más detalles del error
     let errorMessage = 'Error desconocido';
     if (error instanceof Error) {
       errorMessage = error.message;
