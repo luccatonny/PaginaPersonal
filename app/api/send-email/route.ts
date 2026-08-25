@@ -1,22 +1,22 @@
 // app/api/send-email/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import emailjs from '@emailjs/nodejs';
 
 export async function POST(request: NextRequest) {
   console.log('📧 API send-email called');
   
   try {
-    // 1. Obtener variables de entorno DENTRO de la función
+    // 1. Obtener variables de entorno
     const SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
     const TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
     const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
 
-    // 2. Log para debuggear (se verá en los logs de Vercel)
     console.log('🔍 Variables de entorno:');
     console.log('SERVICE_ID:', SERVICE_ID ? '✅ Existe' : '❌ NO EXISTE');
     console.log('TEMPLATE_ID:', TEMPLATE_ID ? '✅ Existe' : '❌ NO EXISTE');
     console.log('PUBLIC_KEY:', PUBLIC_KEY ? '✅ Existe' : '❌ NO EXISTE');
 
-    // 3. Validar variables de entorno
+    // 2. Validar variables de entorno
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       console.error('❌ Faltan variables de entorno de EmailJS');
       return NextResponse.json(
@@ -25,13 +25,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Obtener datos del body
+    // 3. Obtener datos del body
     const body = await request.json();
     console.log('📨 Datos recibidos:', body);
 
     const { name, email, message, current_date } = body;
 
-    // 5. Validar datos
+    // 4. Validar datos
     if (!name || !email || !message) {
       console.error('❌ Datos incompletos');
       return NextResponse.json(
@@ -40,10 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 6. Importar EmailJS dinámicamente
-    const emailjs = await import('@emailjs/browser');
+    // 5. Inicializar EmailJS con la public key
+    // ✅ FORMA CORRECTA para @emailjs/nodejs
+    emailjs.init({
+      publicKey: PUBLIC_KEY,
+    });
 
-    // 7. Preparar parámetros del template
+    // 6. Preparar parámetros del template
     const templateParams = {
       from_name: name,
       from_email: email,
@@ -60,12 +63,11 @@ export async function POST(request: NextRequest) {
 
     console.log('📤 Enviando a EmailJS con templateParams:', templateParams);
 
-    // 8. Enviar email
-    const response = await emailjs.default.send(
+    // 7. Enviar email
+    const response = await emailjs.send(
       SERVICE_ID,
       TEMPLATE_ID,
-      templateParams,
-      PUBLIC_KEY
+      templateParams
     );
 
     console.log('✅ Respuesta de EmailJS:', {
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest) {
       text: response.text,
     });
 
-    // 9. Manejar respuesta
+    // 8. Manejar respuesta
     if (response.status === 200) {
       return NextResponse.json(
         { success: true, message: 'Email enviado correctamente' },
