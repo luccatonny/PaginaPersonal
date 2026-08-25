@@ -274,14 +274,14 @@ export const certifications: Certification[] = [
     institution: "Platzi",
     date: "Noviembre 2024",
     description: "13 horas de teoría y práctica en Python para ciencia de datos.",
-    url: "https://drive.google.com/file/d/1jBXFAV2E8cPb4c5fbu8yf5phWO-nEgZF/view?usp=drive_link",
+    url: "https://platzi.com/@70399468/",
   },
   {
     title: "Curso Profesional de Git y GitHub",
     institution: "Platzi",
     date: "Diciembre 2024",
     description: "22 horas de teoría y práctica en control de versiones con Git y GitHub.",
-    url: "https://drive.google.com/file/d/1FG0fu9hllqev-4Qg4Cr9tUuC-O93G5L4/view?usp=sharing",
+    url: "https://platzi.com/@70399468/",
   },
   {
     title: "Tercer Puesto - Feria de Proyectos de Ingeniería",
