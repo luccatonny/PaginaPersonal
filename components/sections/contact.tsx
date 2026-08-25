@@ -48,7 +48,9 @@ export function Contact() {
     setError(null)
     
     try {
-      // ✅ Enviamos los datos a nuestra API Route (no directamente a EmailJS)
+      console.log('📤 Enviando formulario:', values)
+
+      // ✅ Enviamos los datos a nuestra API Route
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -62,18 +64,35 @@ export function Contact() {
         }),
       })
 
-      const result = await response.json()
+      console.log('📥 Respuesta del servidor:', response.status)
+
+      // Intentar obtener el body de la respuesta
+      let result
+      try {
+        result = await response.json()
+        console.log('📦 Datos de respuesta:', result)
+      } catch (parseError) {
+        console.error('❌ Error al parsear respuesta:', parseError)
+        // Si no se puede parsear, intentar leer como texto
+        const text = await response.text()
+        console.error('📄 Respuesta cruda:', text)
+        throw new Error('Error en el servidor')
+      }
 
       if (response.ok) {
         setSent(true)
         reset()
         setTimeout(() => setSent(false), 4000)
       } else {
-        throw new Error(result.error || "Error al enviar")
+        // Mostrar el error específico del servidor
+        const errorMsg = result?.error || result?.message || 'Error al enviar'
+        console.error('❌ Error del servidor:', errorMsg)
+        throw new Error(errorMsg)
       }
     } catch (err) {
-      setError("Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.")
-      console.error(err)
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido'
+      console.error('❌ Error en onSubmit:', errorMessage)
+      setError(`Hubo un error al enviar el mensaje: ${errorMessage}`)
     }
   }
 
@@ -144,7 +163,7 @@ export function Contact() {
                   {...register("name")}
                   className="rounded-xl border border-input bg-secondary/40 px-4 py-3 text-sm outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
                 />
-                {errors.name ? <span className="text-xs text-destructive">{errors.name.message}</span> : null}
+                {errors.name && <span className="text-xs text-destructive">{errors.name.message}</span>}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="text-sm font-medium">
@@ -158,7 +177,7 @@ export function Contact() {
                   {...register("email")}
                   className="rounded-xl border border-input bg-secondary/40 px-4 py-3 text-sm outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
                 />
-                {errors.email ? <span className="text-xs text-destructive">{errors.email.message}</span> : null}
+                {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
               </div>
             </div>
 
@@ -174,7 +193,7 @@ export function Contact() {
                 {...register("message")}
                 className="resize-none rounded-xl border border-input bg-secondary/40 px-4 py-3 text-sm outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
               />
-              {errors.message ? <span className="text-xs text-destructive">{errors.message.message}</span> : null}
+              {errors.message && <span className="text-xs text-destructive">{errors.message.message}</span>}
             </div>
 
             {error && (
