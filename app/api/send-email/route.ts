@@ -1,6 +1,5 @@
 // app/api/send-email/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import emailjs from '@emailjs/nodejs';
 
 export async function POST(request: NextRequest) {
   console.log('📧 API send-email called');
@@ -12,9 +11,9 @@ export async function POST(request: NextRequest) {
     const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
 
     console.log('🔍 Variables de entorno:');
-    console.log('SERVICE_ID:', SERVICE_ID ? '✅ Existe' : '❌ NO EXISTE');
-    console.log('TEMPLATE_ID:', TEMPLATE_ID ? '✅ Existe' : '❌ NO EXISTE');
-    console.log('PUBLIC_KEY:', PUBLIC_KEY ? '✅ Existe' : '❌ NO EXISTE');
+    console.log('SERVICE_ID:', SERVICE_ID ? `"${SERVICE_ID}"` : '❌ NO EXISTE');
+    console.log('TEMPLATE_ID:', TEMPLATE_ID ? `"${TEMPLATE_ID}"` : '❌ NO EXISTE');
+    console.log('PUBLIC_KEY:', PUBLIC_KEY ? `"${PUBLIC_KEY.substring(0, 10)}..."` : '❌ NO EXISTE');
 
     // 2. Validar variables de entorno
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
@@ -40,13 +39,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. Inicializar EmailJS con la public key
-    // ✅ FORMA CORRECTA para @emailjs/nodejs
-    emailjs.init({
-      publicKey: PUBLIC_KEY,
-    });
-
-    // 6. Preparar parámetros del template
+    // 5. Preparar parámetros del template
     const templateParams = {
       from_name: name,
       from_email: email,
@@ -61,39 +54,47 @@ export async function POST(request: NextRequest) {
       }),
     };
 
-    console.log('📤 Enviando a EmailJS con templateParams:', templateParams);
+    console.log('📤 Enviando a EmailJS via REST API');
 
-    // 7. Enviar email
-    const response = await emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_ID,
-      templateParams
-    );
-
-    console.log('✅ Respuesta de EmailJS:', {
-      status: response.status,
-      text: response.text,
+    // 6. Enviar email usando fetch directo
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        service_id: SERVICE_ID,
+        template_id: TEMPLATE_ID,
+        user_id: PUBLIC_KEY,
+        template_params: templateParams,
+      }),
     });
 
-    // 8. Manejar respuesta
-    if (response.status === 200) {
+    const responseText = await response.text();
+    console.log('✅ Respuesta de EmailJS:', response.status, responseText);
+
+    // 7. Manejar respuesta
+    if (response.ok) {
       return NextResponse.json(
         { success: true, message: 'Email enviado correctamente' },
         { status: 200 }
       );
     } else {
-      console.error('❌ EmailJS respondió con error:', response);
+      console.error('❌ EmailJS respondió con error:', response.status, responseText);
       return NextResponse.json(
-        { error: `Error al enviar el email: ${response.text || 'Error desconocido'}` },
-        { status: 500 }
+        { error: `Error al enviar el email: ${responseText}` },
+        { status: response.status }
       );
     }
   } catch (error) {
     console.error('❌ Error en API send-email:', error);
     
     // Mostrar más detalles del error
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-    console.error('Detalle del error:', errorMessage);
+    let errorMessage = 'Error desconocido';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      console.error('Stack trace:', error.stack);
+    }
     
     return NextResponse.json(
       { error: `Error al enviar el mensaje: ${errorMessage}` },
